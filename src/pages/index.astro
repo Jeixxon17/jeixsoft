@@ -1,13 +1,12 @@
 ---
 import Base from '../layouts/Base.astro';
 import ProjectItem from '../components/ProjectItem.astro';
-import { defaultProjects, defaultSettings } from '../lib/defaults';
-import { contactLinks, whatsappUrl } from '../lib/links';
+import { loadSiteContent } from '../lib/content';
+import { contactLinks, onlyDigits, safeHttpsUrl, safeImageUrl, socialUrl, whatsappUrl } from '../lib/links';
 import { ui } from '../lib/ui';
 import { iconSvg } from '../lib/icons';
 
-const settings = defaultSettings;
-const projects = defaultProjects.filter((p) => p.published).sort((a, b) => a.order - b.order);
+const { settings, projects } = await loadSiteContent();
 const links = contactLinks(settings);
 const year = new Date().getFullYear();
 
@@ -49,14 +48,92 @@ const navLinks = [
   ['#contacto', 'Contacto'],
 ];
 
+const pageTitle = 'JeiXSoft | Desarrollo web y software a la medida en Medellín';
+const pageDescription =
+  'JeiXSoft diseña y desarrolla sitios web, aplicaciones web y paneles administrativos a la medida en Medellín, Colombia.';
+
+// Datos estructurados para Google (schema.org): la marca, su fundador, el sitio y el portafolio.
+const site = Astro.site!;
+const abs = (path: string) => new URL(path, site).toString();
+const sameAs = [
+  socialUrl('instagram', settings.instagram),
+  socialUrl('linkedin', settings.linkedin),
+  socialUrl('github', settings.github),
+].filter(Boolean);
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@graph': [
+    {
+      '@type': 'ProfessionalService',
+      '@id': abs('/#organizacion'),
+      name: 'JeiXSoft',
+      slogan: 'Ideas que se convierten en soluciones',
+      description: pageDescription,
+      url: abs('/'),
+      logo: abs('/logo.png'),
+      image: abs('/og.jpg'),
+      email: settings.email || undefined,
+      telephone: settings.whatsapp ? `+${onlyDigits(settings.whatsapp)}` : undefined,
+      address: { '@type': 'PostalAddress', addressLocality: 'Medellín', addressRegion: 'Antioquia', addressCountry: 'CO' },
+      areaServed: { '@type': 'Country', name: 'Colombia' },
+      founder: { '@id': abs('/#fundador') },
+      sameAs,
+      knowsAbout: ['Desarrollo web', 'Aplicaciones web', 'Paneles administrativos', 'TypeScript', 'Vue', 'Astro', 'Firebase'],
+      hasOfferCatalog: {
+        '@type': 'OfferCatalog',
+        name: 'Servicios',
+        itemListElement: services.map((s) => ({
+          '@type': 'Offer',
+          itemOffered: { '@type': 'Service', name: s.title, description: s.text },
+        })),
+      },
+    },
+    {
+      '@type': 'Person',
+      '@id': abs('/#fundador'),
+      name: 'Jeison Martinez',
+      jobTitle: 'Ingeniero de software',
+      worksFor: { '@id': abs('/#organizacion') },
+      address: { '@type': 'PostalAddress', addressLocality: 'Medellín', addressCountry: 'CO' },
+      sameAs,
+    },
+    {
+      '@type': 'WebSite',
+      '@id': abs('/#sitio'),
+      url: abs('/'),
+      name: 'JeiXSoft',
+      inLanguage: 'es-CO',
+      publisher: { '@id': abs('/#organizacion') },
+    },
+    {
+      '@type': 'ItemList',
+      name: 'Proyectos de JeiXSoft',
+      itemListElement: projects.map((p, i) => {
+        const image = safeImageUrl(p.imageUrl);
+        return {
+          '@type': 'ListItem',
+          position: i + 1,
+          item: {
+            '@type': 'CreativeWork',
+            name: p.title,
+            description: p.summary,
+            image: image ? abs(image) : undefined,
+            url: safeHttpsUrl(p.url) || undefined,
+            dateCreated: p.year || undefined,
+            keywords: p.stack.join(', ') || undefined,
+            creator: { '@id': abs('/#organizacion') },
+          },
+        };
+      }),
+    },
+  ],
+};
+
 const footerHeading = 'mb-[1.1rem] font-body text-[0.75rem] font-semibold tracking-[0.12em] text-footer-muted uppercase';
 const footerList = 'grid list-none gap-[0.7rem] text-fine';
 ---
 
-<Base
-  title="JeiXSoft | Desarrollo web y software a la medida en Medellín"
-  description="JeiXSoft diseña y desarrolla sitios web, aplicaciones web y paneles administrativos a la medida en Medellín, Colombia."
->
+<Base title={pageTitle} description={pageDescription} jsonLd={jsonLd}>
   <a class="absolute -left-[999px] top-2 z-50 bg-night px-[0.9rem] py-2 text-white focus:left-2" href="#contenido">Saltar al contenido</a>
 
   <header class="sticky top-0 z-20 border-b border-line bg-[color-mix(in_srgb,var(--color-paper)_92%,transparent)] backdrop-blur-[8px]">

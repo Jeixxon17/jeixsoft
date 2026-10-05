@@ -115,6 +115,17 @@ src/
 firestore.rules           Reglas de base de datos
 ```
 
+## SEO y redes sociales
+
+- Al compilar, `src/lib/content.ts` lee los proyectos y los datos de contacto de Firestore, así el HTML que ven Google
+  y las redes ya los incluye. En el navegador se vuelven a consultar para mostrar cambios hechos después.
+  **Después de cambios importantes en el panel, vuelve a desplegar** (en Vercel: Deployments > Redeploy) para que
+  Google y las vistas previas de enlaces los vean.
+- `src/layouts/Base.astro`: título, descripción, URL canónica, Open Graph (WhatsApp, Facebook, LinkedIn) y X/Twitter.
+- Datos estructurados (schema.org) en la página principal: la marca, su fundador, el sitio y la lista de proyectos.
+- `/sitemap.xml` y `/robots.txt` se generan solos con el dominio de `site` en `astro.config.mjs`.
+- `public/og.jpg` (1200×630) es la imagen que aparece al compartir el enlace.
+
 ## Imágenes de los proyectos
 
 No se usa Firebase Storage. Las imágenes viven dentro del sitio:

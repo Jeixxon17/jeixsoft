@@ -5,35 +5,74 @@ interface Props {
   title: string;
   description?: string;
   noindex?: boolean;
+  /** Imagen para compartir en redes (ruta pública o URL absoluta). */
+  image?: string;
+  imageAlt?: string;
+  /** Datos estructurados (schema.org) para Google. */
+  jsonLd?: object;
 }
 
 const {
   title,
   description = 'JeiXSoft diseña y desarrolla sitios web, aplicaciones web y paneles administrativos a la medida en Medellín, Colombia.',
   noindex = false,
+  image = '/og.jpg',
+  imageAlt = 'JeiXSoft, ideas que se convierten en soluciones',
+  jsonLd,
 } = Astro.props;
-const canonical = new URL(Astro.url.pathname, Astro.site);
+
+const canonical = new URL(Astro.url.pathname.replace(/\.html$/, '').replace(/\/index$/, '/'), Astro.site);
+const imageUrl = new URL(image, Astro.site);
+// Evita que el JSON pueda cerrar la etiqueta <script>.
+const jsonLdText = jsonLd ? JSON.stringify(jsonLd).replace(/</g, '\\u003c') : '';
 ---
 
 <!doctype html>
-<html lang="es">
+<html lang="es-CO">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>{title}</title>
     <meta name="description" content={description} />
-    {noindex ? <meta name="robots" content="noindex, nofollow" /> : <link rel="canonical" href={canonical} />}
+    <meta name="author" content="Jeison Martinez" />
+    {
+      noindex ? (
+        <meta name="robots" content="noindex, nofollow" />
+      ) : (
+        <>
+          <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1" />
+          <link rel="canonical" href={canonical} />
+        </>
+      )
+    }
     <meta name="theme-color" content="#040a1c" />
     <link rel="icon" href="/favicon.png" type="image/png" />
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <link rel="manifest" href="/site.webmanifest" />
+    <link rel="sitemap" href="/sitemap.xml" />
+
+    <!-- Open Graph (WhatsApp, Facebook, LinkedIn, Instagram) -->
     <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="JeiXSoft" />
+    <meta property="og:locale" content="es_CO" />
+    <meta property="og:url" content={canonical} />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
-    <meta property="og:locale" content="es_CO" />
-    <meta property="og:image" content={new URL('/og.jpg', Astro.site)} />
+    <meta property="og:image" content={imageUrl} />
+    <meta property="og:image:secure_url" content={imageUrl} />
+    <meta property="og:image:type" content="image/jpeg" />
     <meta property="og:image:width" content="1200" />
-    <meta property="og:image:height" content="800" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content={imageAlt} />
+
+    <!-- X / Twitter -->
     <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={imageUrl} />
+    <meta name="twitter:image:alt" content={imageAlt} />
+
+    {jsonLd && <script is:inline type="application/ld+json" set:html={jsonLdText} />}
   </head>
   <body class="m-0 bg-paper font-body text-step-0 leading-[1.6] text-ink antialiased">
     <slot />

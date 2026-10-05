@@ -1,0 +1,18 @@
+---
+import Base from '../layouts/Base.astro';
+import { ui } from '../lib/ui';
+---
+
+<Base title="Página no encontrada | JeiXSoft" noindex>
+  <main class="grid min-h-dvh place-items-center p-gutter text-center">
+    <div class="grid justify-items-center gap-5">
+      <a href="/" aria-label="JeiXSoft, inicio">
+        <img src="/logo.png" alt="JeiXSoft" width="929" height="208" class="h-8 w-auto" />
+      </a>
+      <p class="font-display text-[length:clamp(4rem,15vw,8rem)] leading-none font-bold text-sky">404</p>
+      <h1 class="text-step-2">Esta página no existe</h1>
+      <p class="max-w-[28rem] text-ink-soft">Puede que el enlace esté mal escrito o que la página se haya movido.</p>
+      <a class={ui.btnPrimary} href="/">Volver al inicio</a>
+    </div>
+  </main>
+</Base>
