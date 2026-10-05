@@ -2,7 +2,7 @@ import { defineConfig } from 'astro/config';
 import tailwindcss from '@tailwindcss/vite';
 
 export default defineConfig({
-  site: 'https://jeixsoft.web.app',
+  site: 'https://jeixsoft.vercel.app',
   output: 'static',
   build: {
     inlineStylesheets: 'never',

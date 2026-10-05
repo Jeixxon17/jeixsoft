@@ -75,6 +75,16 @@ npm run deploy
 Esto compila el sitio y despliega Hosting y las reglas de Firestore.
 Sin CLI, también puedes copiar `firestore.rules` en Firebase Console > Firestore Database > Reglas y pulsar Publicar.
 
+### Despliegue en Vercel (alternativa)
+
+El sitio también funciona en Vercel. `vercel.json` activa las URLs limpias (`/admin` sirve `admin.html`) y las cabeceras de seguridad.
+
+1. Importa el repositorio en Vercel (detecta Astro solo; la carpeta de salida es `dist`).
+2. En **Settings > Environment Variables** agrega las mismas variables del `.env` (`PUBLIC_FIREBASE_*`, `PUBLIC_ADMIN_EMAIL`, `PUBLIC_ADMIN_UID`) y vuelve a desplegar.
+3. Las reglas de Firestore se siguen publicando desde la consola de Firebase o con `firebase deploy --only firestore`.
+
+Si cambias de dominio, actualiza `site` en `astro.config.mjs`.
+
 ### 7. Primer ingreso
 
 1. Entra a `https://tu-dominio/admin` y escribe tu PIN.
