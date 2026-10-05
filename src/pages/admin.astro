@@ -1,0 +1,234 @@
+---
+import Base from '../layouts/Base.astro';
+import { ui } from '../lib/ui';
+import { projectImages } from '../lib/gallery';
+
+const images = projectImages();
+
+const panelHead = 'mb-6 flex flex-wrap items-center justify-between gap-4';
+const tab =
+  'cursor-pointer border-b-[2.5px] border-transparent bg-transparent px-0 py-3 font-body text-step-0 leading-[1.2] font-semibold text-ink-soft aria-selected:border-cobalt aria-selected:text-ink';
+const span2 = 'col-span-2 max-[641px]:col-auto';
+---
+
+<Base title="Panel | JeiXSoft" noindex>
+  <section class="grid min-h-dvh place-items-center p-gutter" data-pin-view hidden>
+    <form class="grid w-[min(100%,22rem)] gap-5 rounded-card border border-line bg-surface p-8" data-pin-form novalidate>
+      <img src="/logo.png" alt="JeiXSoft" width="929" height="208" class="h-8 w-auto justify-self-start" />
+      <h1 class="-mt-2 text-step-3">Panel</h1>
+      <div class={ui.field}>
+        <label class={ui.label} for="pin">PIN de acceso</label>
+        <input
+          id="pin"
+          name="pin"
+          type="password"
+          inputmode="numeric"
+          autocomplete="off"
+          pattern="[0-9]*"
+          minlength="6"
+          maxlength="12"
+          required
+          class={`${ui.input} text-center text-[1.5rem] tracking-[0.4em]`}
+        />
+      </div>
+      <p class={ui.error} data-pin-error role="alert" hidden></p>
+      <button class={ui.btnPrimary} type="submit" data-pin-submit>Entrar</button>
+      <a class="justify-self-center text-fine text-ink-soft underline" href="/">Volver al sitio</a>
+    </form>
+  </section>
+
+  <div data-admin hidden>
+    <header class="border-b border-line bg-surface">
+      <div class={`${ui.adminWrap} flex min-h-16 items-center justify-between gap-4`}>
+        <p class="flex min-w-0 items-center">
+          <img src="/logo.png" alt="JeiXSoft" width="929" height="208" class="h-6 w-auto shrink-0 max-[400px]:h-5" />
+          <span class="ml-[0.6rem] font-body text-step-0 font-medium tracking-normal text-ink-soft max-[400px]:hidden">Panel</span>
+        </p>
+        <div class="flex shrink-0 items-center gap-5 text-fine font-semibold whitespace-nowrap max-[400px]:gap-3">
+          <a class="underline" href="/" target="_blank" rel="noopener">Ver sitio</a>
+          <button type="button" class={ui.linkButton} data-logout>Cerrar sesión</button>
+        </div>
+      </div>
+      <nav class={`${ui.adminWrap} flex gap-7`} role="tablist" aria-label="Secciones del panel">
+        <button class={tab} role="tab" id="tab-projects" aria-controls="panel-projects" aria-selected="true" data-tab="projects">
+          Proyectos
+        </button>
+        <button
+          class={tab}
+          role="tab"
+          id="tab-settings"
+          aria-controls="panel-settings"
+          aria-selected="false"
+          data-tab="settings"
+          tabindex="-1">Contacto y redes</button
+        >
+      </nav>
+    </header>
+
+    <main class={`${ui.adminWrap} pt-10 pb-16`}>
+      <section id="panel-projects" role="tabpanel" aria-labelledby="tab-projects" data-panel="projects">
+        <div class={panelHead}>
+          <h2 class="text-step-2">Proyectos</h2>
+          <button class={ui.btnPrimary} type="button" data-new-project>Nuevo proyecto</button>
+        </div>
+        <div data-project-list class="grid gap-3" aria-live="polite">
+          <p class={ui.muted}>Cargando proyectos...</p>
+        </div>
+      </section>
+
+      <section id="panel-settings" role="tabpanel" aria-labelledby="tab-settings" data-panel="settings" hidden>
+        <div class={panelHead}>
+          <h2 class="text-step-2">Contacto y redes</h2>
+        </div>
+        <form class="grid max-w-[34rem] gap-5" data-settings-form novalidate>
+          <div class={ui.field}>
+            <label class={ui.label} for="s-whatsapp">WhatsApp</label>
+            <input class={ui.input} id="s-whatsapp" name="whatsapp" inputmode="tel" required maxlength="20" />
+            <span class={ui.hint}>Con código de país, solo números. Ejemplo: 573225276020. Aquí llegan los mensajes del formulario.</span>
+          </div>
+          <div class={ui.field}>
+            <label class={ui.label} for="s-instagram">Instagram</label>
+            <input class={ui.input} id="s-instagram" name="instagram" maxlength="200" />
+            <span class={ui.hint}>Usuario (sin @) o enlace completo.</span>
+          </div>
+          <div class={ui.field}>
+            <label class={ui.label} for="s-linkedin">LinkedIn</label>
+            <input class={ui.input} id="s-linkedin" name="linkedin" maxlength="200" />
+            <span class={ui.hint}>Usuario del perfil o enlace completo.</span>
+          </div>
+          <div class={ui.field}>
+            <label class={ui.label} for="s-github">GitHub</label>
+            <input class={ui.input} id="s-github" name="github" maxlength="200" />
+            <span class={ui.hint}>Usuario o enlace completo.</span>
+          </div>
+          <div class={ui.field}>
+            <label class={ui.label} for="s-email">Correo <span class={ui.hint}>(opcional)</span></label>
+            <input class={ui.input} id="s-email" name="email" type="email" maxlength="120" />
+          </div>
+          <div>
+            <button class={ui.btnPrimary} type="submit">Guardar cambios</button>
+          </div>
+        </form>
+      </section>
+    </main>
+  </div>
+
+  <dialog
+    class="m-auto max-h-[calc(100dvh_-_2rem)] w-[min(100%_-_2rem,44rem)] rounded-card bg-paper p-0 text-ink backdrop:bg-night/75"
+    data-editor
+    aria-labelledby="editor-title"
+  >
+    <form method="dialog" class="p-[clamp(1.25rem,4vw,2rem)]" data-project-form novalidate>
+      <div class="mb-6 flex items-center justify-between gap-4">
+        <h2 id="editor-title" class="text-step-2" data-editor-title>Nuevo proyecto</h2>
+        <button type="button" class={ui.linkButton} data-editor-close>Cancelar</button>
+      </div>
+
+      <div class="grid grid-cols-2 gap-[1.1rem] max-[641px]:grid-cols-1">
+        <div class={`${ui.field} ${span2}`}>
+          <label class={ui.label} for="p-title">Nombre del proyecto</label>
+          <input class={ui.input} id="p-title" name="title" required maxlength="80" />
+        </div>
+        <div class={ui.field}>
+          <label class={ui.label} for="p-client">Tipo de cliente o sector</label>
+          <input class={ui.input} id="p-client" name="client" maxlength="80" placeholder="Barbería, academia, proyecto propio..." />
+        </div>
+        <div class={ui.field}>
+          <label class={ui.label} for="p-year">Año</label>
+          <input class={ui.input} id="p-year" name="year" inputmode="numeric" maxlength="9" />
+        </div>
+        <div class={`${ui.field} ${span2}`}>
+          <label class={ui.label} for="p-summary">Descripción</label>
+          <textarea class={ui.textarea} id="p-summary" name="summary" required maxlength="600"></textarea>
+          <span class={ui.hint} data-summary-count>0 / 600</span>
+        </div>
+        <div class={`${ui.field} ${span2}`}>
+          <label class={ui.label} for="p-stack">Tecnologías</label>
+          <input class={ui.input} id="p-stack" name="stack" maxlength="300" placeholder="Vue 3, TypeScript, Firebase" />
+          <span class={ui.hint}>Separadas por coma, máximo 12.</span>
+        </div>
+        <div class={ui.field}>
+          <label class={ui.label} for="p-url">Enlace al proyecto</label>
+          <input class={ui.input} id="p-url" name="url" type="url" maxlength="300" placeholder="https://" />
+        </div>
+        <div class={ui.field}>
+          <label class={ui.label} for="p-repo">Repositorio</label>
+          <input class={ui.input} id="p-repo" name="repo" type="url" maxlength="300" placeholder="https://" />
+        </div>
+        <div class={`${ui.field} ${span2}`}>
+          <span class={ui.label} id="image-label">Imagen</span>
+          <div class="flex items-start gap-4 max-[641px]:flex-col">
+            <div
+              class="grid aspect-[16/10] flex-[0_0_10rem] place-items-center overflow-hidden rounded-field border border-line bg-surface text-fine text-ink-soft max-[641px]:w-full max-[641px]:basis-auto [&_img]:h-full [&_img]:w-full [&_img]:object-cover"
+              data-image-preview
+            >
+              <span>Sin imagen</span>
+            </div>
+            <div class="grid min-w-0 flex-1 gap-3">
+              {
+                images.length > 0 ? (
+                  <div
+                    class="grid max-h-56 grid-cols-[repeat(auto-fill,minmax(6.5rem,1fr))] gap-2 overflow-y-auto p-0.5"
+                    role="group"
+                    aria-labelledby="image-label"
+                    data-gallery
+                  >
+                    {images.map((img) => (
+                      <button
+                        type="button"
+                        class="aspect-[16/10] cursor-pointer overflow-hidden rounded-field border-2 border-line bg-night transition-colors hover:border-line-strong aria-pressed:border-sky"
+                        data-gallery-item
+                        data-src={img.src}
+                        aria-pressed="false"
+                        title={img.name}
+                      >
+                        <img src={img.src} alt={img.name} loading="lazy" class="h-full w-full object-cover" />
+                      </button>
+                    ))}
+                  </div>
+                ) : (
+                  <p class={ui.hint}>Todavía no hay imágenes en la carpeta.</p>
+                )
+              }
+              <p class={ui.hint} data-gallery-empty hidden>Todas las imágenes ya están en uso en otros proyectos.</p>
+              <span class={ui.hint}>
+                Para agregar imágenes, cópialas en la carpeta <code class="text-ink">public/projects/</code> del proyecto y recarga el panel.
+              </span>
+              <label for="p-image-url" class={`${ui.label} text-ink-soft`}>O pega el enlace de una imagen:</label>
+              <input class={ui.input} id="p-image-url" name="imageUrl" type="url" maxlength="1000" placeholder="https://" />
+              <button type="button" class={`${ui.linkButtonDanger} justify-self-start`} data-image-remove hidden>Quitar imagen</button>
+            </div>
+          </div>
+        </div>
+        <div class={ui.field}>
+          <label class={ui.label} for="p-order">Orden</label>
+          <input class={ui.input} id="p-order" name="order" type="number" min="0" max="999" step="1" value="1" />
+          <span class={ui.hint}>El número más bajo aparece primero.</span>
+        </div>
+        <div class={`${ui.field} self-center`}>
+          <label class="flex cursor-pointer items-center gap-[0.6rem] text-step-0 font-medium">
+            <input class="h-[1.15rem] w-[1.15rem] accent-cobalt" type="checkbox" name="published" checked /> Publicado en el sitio
+          </label>
+        </div>
+      </div>
+
+      <p class={ui.error} data-editor-error role="alert" hidden></p>
+      <div class="mt-6">
+        <button class={ui.btnPrimary} type="submit" data-editor-save>Guardar proyecto</button>
+      </div>
+    </form>
+  </dialog>
+
+  <div
+    class={`fixed bottom-5 left-1/2 z-60 max-w-[calc(100%_-_2rem)] -translate-x-1/2 rounded-field px-[1.1rem] py-3 text-fine font-medium text-white ${ui.admin.toastOk}`}
+    data-toast
+    role="status"
+    aria-live="polite"
+    hidden
+  >
+  </div>
+
+  <script>
+    import '../scripts/admin';
+  </script>
+</Base>

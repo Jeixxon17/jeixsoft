@@ -1,0 +1,62 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Solo existe un administrador. Este UID debe ser el mismo de PUBLIC_ADMIN_UID en .env
+    // (Firebase Console > Authentication > Usuarios).
+    function isAdmin() {
+      return request.auth != null
+        && request.auth.uid == '7g94iGPwfJeUDF0sMPqi8TChbJk1';
+    }
+
+    function isOptionalString(data, field, max) {
+      return !(field in data) || (data[field] is string && data[field].size() <= max);
+    }
+
+    function validSettings(d) {
+      return d.keys().hasOnly(['whatsapp', 'instagram', 'linkedin', 'github', 'email', 'updatedAt'])
+        && d.whatsapp is string && d.whatsapp.matches('^[0-9]{8,15}$')
+        && isOptionalString(d, 'instagram', 200)
+        && isOptionalString(d, 'linkedin', 200)
+        && isOptionalString(d, 'github', 200)
+        && isOptionalString(d, 'email', 120);
+    }
+
+    function validProject(d) {
+      return d.keys().hasOnly([
+          'title', 'client', 'summary', 'stack', 'year', 'url', 'repo',
+          'imageUrl', 'imagePath', 'published', 'order', 'createdAt', 'updatedAt'
+        ])
+        && d.title is string && d.title.size() > 0 && d.title.size() <= 80
+        && d.summary is string && d.summary.size() > 0 && d.summary.size() <= 600
+        && d.stack is list && d.stack.size() <= 12
+        && d.published is bool
+        && d.order is number
+        && isOptionalString(d, 'client', 80)
+        && isOptionalString(d, 'year', 9)
+        && isOptionalString(d, 'url', 300)
+        && isOptionalString(d, 'repo', 300)
+        && isOptionalString(d, 'imageUrl', 1000)
+        && isOptionalString(d, 'imagePath', 300);
+    }
+
+    match /settings/{docId} {
+      allow read: if docId == 'site';
+      allow create, update: if isAdmin() && docId == 'site' && validSettings(request.resource.data);
+      allow delete: if false;
+    }
+
+    match /projects/{projectId} {
+      // El público solo puede leer proyectos publicados (la consulta debe filtrar published == true).
+      allow read: if resource.data.published == true || isAdmin();
+      allow create, update: if isAdmin() && validProject(request.resource.data);
+      allow delete: if isAdmin();
+    }
+
+    // Todo lo demás queda cerrado.
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}

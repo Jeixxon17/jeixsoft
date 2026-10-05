@@ -1,0 +1,58 @@
+---
+import type { Project } from '../lib/types';
+import { safeHttpsUrl, safeImageUrl } from '../lib/links';
+import { ui } from '../lib/ui';
+
+interface Props {
+  project: Project;
+}
+const { project: p } = Astro.props;
+const url = safeHttpsUrl(p.url);
+const repo = safeHttpsUrl(p.repo);
+const image = safeImageUrl(p.imageUrl);
+const meta = [p.client, p.year].filter(Boolean).join(', ');
+const c = ui.project;
+---
+
+<article class={c.article}>
+  <div class={c.media}>
+    {
+      image ? (
+        <img class={c.img} src={image} alt={`Captura de ${p.title}`} loading="lazy" decoding="async" width="1600" height="1000" />
+      ) : (
+        <div class={c.placeholder} aria-hidden="true">
+          <span class={c.placeholderText}>{p.title}</span>
+        </div>
+      )
+    }
+  </div>
+  <div>
+    {meta && <p class={c.meta}>{meta}</p>}
+    <h3 class={c.title}>{p.title}</h3>
+    <p class={c.summary}>{p.summary}</p>
+    {
+      p.stack.length > 0 && (
+        <p class={c.stack}>
+          <span class="sr-only">Tecnologías: </span>
+          {p.stack.join(', ')}
+        </p>
+      )
+    }
+    {
+      (url || repo) && (
+        <div class={c.links}>
+          {url && (
+            <a class={c.link} href={url} target="_blank" rel="noopener noreferrer">
+              Ver proyecto
+            </a>
+          )}
+          {repo && (
+            <a class={c.link} href={repo} target="_blank" rel="noopener noreferrer">
+              Ver código
+            </a>
+          )}
+        </div>
+      )
+    }
+  </div>
+</article>

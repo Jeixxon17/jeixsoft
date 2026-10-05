@@ -1,0 +1,354 @@
+---
+import Base from '../layouts/Base.astro';
+import ProjectItem from '../components/ProjectItem.astro';
+import { defaultProjects, defaultSettings } from '../lib/defaults';
+import { contactLinks, whatsappUrl } from '../lib/links';
+import { ui } from '../lib/ui';
+import { iconSvg } from '../lib/icons';
+
+const settings = defaultSettings;
+const projects = defaultProjects.filter((p) => p.published).sort((a, b) => a.order - b.order);
+const links = contactLinks(settings);
+const year = new Date().getFullYear();
+
+const services = [
+  {
+    icon: 'web',
+    title: 'Sitios web',
+    text: 'Páginas corporativas y landing pages rápidas, adaptadas a celulares y preparadas para aparecer en Google.',
+  },
+  {
+    icon: 'code',
+    title: 'Aplicaciones web',
+    text: 'Aplicaciones a la medida con usuarios, formularios, bases de datos y conexión con otros servicios.',
+  },
+  {
+    icon: 'chart',
+    title: 'Paneles administrativos',
+    text: 'Paneles para administrar contenido, usuarios o pedidos de forma sencilla, sin tocar código.',
+  },
+  {
+    icon: 'wrench',
+    title: 'Soporte y mejoras',
+    text: 'Mantenimiento, correcciones y nuevas funciones para sitios que ya están en línea.',
+  },
+];
+
+const steps = [
+  { title: 'Conversación', text: 'Nos cuentas tu idea y lo que necesitas.' },
+  { title: 'Propuesta', text: 'Recibes por escrito el alcance, el tiempo de entrega y el costo antes de empezar.' },
+  { title: 'Desarrollo', text: 'Avanzamos por etapas y puedes revisar el progreso cada semana.' },
+  { title: 'Entrega', text: 'Publicamos el proyecto, te enseñamos a usarlo y seguimos disponibles para ajustes.' },
+];
+
+const navLinks = [
+  ['#servicios', 'Servicios'],
+  ['#proyectos', 'Proyectos'],
+  ['#nosotros', 'Nosotros'],
+  ['#proceso', 'Cómo trabajamos'],
+  ['#contacto', 'Contacto'],
+];
+
+const footerHeading = 'mb-[1.1rem] font-body text-[0.75rem] font-semibold tracking-[0.12em] text-footer-muted uppercase';
+const footerList = 'grid list-none gap-[0.7rem] text-fine';
+---
+
+<Base
+  title="JeiXSoft | Desarrollo web y software a la medida en Medellín"
+  description="JeiXSoft diseña y desarrolla sitios web, aplicaciones web y paneles administrativos a la medida en Medellín, Colombia."
+>
+  <a class="absolute -left-[999px] top-2 z-50 bg-night px-[0.9rem] py-2 text-white focus:left-2" href="#contenido">Saltar al contenido</a>
+
+  <header class="sticky top-0 z-20 border-b border-line bg-[color-mix(in_srgb,var(--color-paper)_92%,transparent)] backdrop-blur-[8px]">
+    <div class={`${ui.wrap} flex min-h-[4.25rem] items-center gap-8`}>
+      <a href="/" class="shrink-0" aria-label="JeiXSoft, inicio">
+        <img src="/logo.png" alt="JeiXSoft" width="929" height="208" class="h-7 w-auto" />
+      </a>
+      <nav aria-label="Principal" class="ml-auto flex gap-6 max-[961px]:hidden">
+        {
+          navLinks.map(([href, label]) => (
+            <a
+              href={href}
+              class="font-medium text-ink-soft no-underline hover:text-ink hover:underline hover:decoration-[1.5px] hover:underline-offset-[6px]"
+            >
+              {label}
+            </a>
+          ))
+        }
+      </nav>
+      <a class={`${ui.btnPrimarySmall} max-[961px]:ml-auto`} href="#contacto">Hablemos</a>
+    </div>
+  </header>
+
+  <main id="contenido">
+    <!-- Hero -->
+    <section class="relative isolate overflow-hidden pt-[clamp(3.5rem,9vw,7rem)] pb-[clamp(3.5rem,8vw,6.5rem)]">
+      <!-- Formas en diagonal como las esquinas del logo -->
+      <div
+        aria-hidden="true"
+        class="pointer-events-none absolute -top-56 -left-56 -z-10 size-[26rem] rotate-45 rounded-[4rem] bg-[linear-gradient(90deg,transparent_30%,color-mix(in_srgb,var(--color-cobalt)_55%,transparent))] opacity-70"
+      >
+      </div>
+      <div
+        aria-hidden="true"
+        class="pointer-events-none absolute -right-60 -bottom-72 -z-10 size-[30rem] rotate-45 rounded-[4rem] bg-[linear-gradient(270deg,transparent_30%,color-mix(in_srgb,var(--color-cobalt)_45%,transparent))] opacity-60"
+      >
+      </div>
+
+      <div class={`${ui.wrap} grid grid-cols-[minmax(0,1fr)_auto] items-center gap-[clamp(2.5rem,6vw,5rem)] max-[961px]:grid-cols-1`}>
+        <div>
+          <p class="mb-5 animate-rise text-fine font-medium tracking-[0.28em] text-sky uppercase">Ideas que se convierten en soluciones</p>
+          <h1 class="max-w-[17ch] animate-rise text-step-4 font-bold tracking-[-0.035em]">
+            Sitios web y software, hechos con cuidado en cada detalle.
+          </h1>
+          <p class="mt-7 max-w-152 animate-rise-late text-step-1 leading-normal text-ink-soft">
+            JeiXSoft nace del gusto por programar. Diseñamos y desarrollamos sitios web, aplicaciones y sistemas
+            cuidando que se vean bien, que funcionen rápido y que el código quede ordenado.
+          </p>
+          <div class="mt-9 flex flex-wrap gap-3">
+            <a
+              class={`${ui.btnPrimary} max-[721px]:flex-[1_1_100%]`}
+              data-wa-link
+              href={whatsappUrl(settings.whatsapp)}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Cotizar proyecto
+            </a>
+            <a class={`${ui.btnGhost} max-[721px]:flex-[1_1_100%]`} href="#proyectos">Ver proyectos</a>
+          </div>
+        </div>
+
+        <!-- Símbolo de la marca -->
+        <div class="relative grid animate-rise-late place-items-center max-[961px]:hidden" aria-hidden="true">
+          <div class="absolute size-72 rounded-full bg-cobalt/25 blur-3xl"></div>
+          <img src="/logo-x.png" alt="" width="238" height="194" class="relative w-[clamp(12rem,22vw,18rem)]" />
+        </div>
+      </div>
+    </section>
+
+    <!-- Servicios -->
+    <section id="servicios" class={ui.section} aria-labelledby="servicios-title">
+      <div class={ui.wrap}>
+        <div class={ui.sectionHead}>
+          <h2 id="servicios-title" class={ui.sectionTitle}>Servicios</h2>
+          <p class={ui.sectionText}>Diseño, desarrollo y publicación en un solo lugar.</p>
+        </div>
+        <ul class="grid list-none grid-cols-2 gap-5 max-[641px]:grid-cols-1">
+          {
+            services.map((s) => (
+              <li class="group flex gap-5 rounded-card border border-line bg-surface p-7 transition-colors duration-200 hover:border-cobalt max-[480px]:flex-col">
+                <span
+                  class="grid size-12 shrink-0 place-items-center rounded-xl bg-cobalt/15 text-sky transition-colors duration-200 group-hover:bg-cobalt group-hover:text-white"
+                  set:html={iconSvg(s.icon, 'size-6')}
+                />
+                <div>
+                  <h3 class="text-step-1">{s.title}</h3>
+                  <p class="mt-2 text-ink-soft">{s.text}</p>
+                </div>
+              </li>
+            ))
+          }
+        </ul>
+      </div>
+    </section>
+
+    <!-- Proyectos -->
+    <section id="proyectos" class={`${ui.section} border-y border-line bg-surface`} aria-labelledby="proyectos-title">
+      <div class={ui.wrap}>
+        <div class={ui.sectionHead}>
+          <h2 id="proyectos-title" class={ui.sectionTitle}>Proyectos</h2>
+          <p class={ui.sectionText}>Algunos de los trabajos más recientes.</p>
+        </div>
+        <div class="grid gap-[clamp(3rem,7vw,5.5rem)]" data-projects aria-live="polite">
+          {projects.map((p) => <ProjectItem project={p} />)}
+        </div>
+      </div>
+    </section>
+
+    <!-- Nosotros -->
+    <section id="nosotros" class={ui.section} aria-labelledby="nosotros-title">
+      <div class={`${ui.wrap} grid grid-cols-[minmax(0,5fr)_minmax(0,6fr)] gap-[clamp(2rem,7vw,6rem)] max-[961px]:grid-cols-1`}>
+        <h2 id="nosotros-title" class={ui.sectionTitle}>Sobre JeiXSoft</h2>
+        <div class="grid gap-5 text-step-1 leading-[1.6] text-ink-soft max-[641px]:text-step-0">
+          <p>
+            JeiXSoft es la marca de{' '}
+            <strong class="font-semibold text-ink">Jeison Martinez</strong>, ingeniero de software de Medellín. Nació del gusto
+            por programar y por ver cómo una idea se convierte en algo que funciona.
+          </p>
+          <p>
+            En cada proyecto cuidamos también lo que no siempre se ve: código limpio, buen rendimiento y una base que se pueda
+            mantener y mejorar con el tiempo. Lo acompaña la misma persona de principio a fin, desde la primera conversación
+            hasta la publicación.
+          </p>
+          <p class="text-step-0">
+            Trabajamos con TypeScript, Vue, Astro, Tailwind CSS y Firebase, entre otras tecnologías.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Proceso -->
+    <section id="proceso" class={`${ui.section} border-y border-line bg-surface`} aria-labelledby="proceso-title">
+      <div class={ui.wrap}>
+        <div class={ui.sectionHead}>
+          <h2 id="proceso-title" class={ui.sectionTitle}>Cómo trabajamos</h2>
+          <p class={ui.sectionText}>Cuatro pasos, sin sorpresas en el camino.</p>
+        </div>
+        <ol class="grid list-none grid-cols-4 gap-8 max-[961px]:grid-cols-2 max-[721px]:grid-cols-1 max-[721px]:gap-7">
+          {
+            steps.map((s, i) => (
+              <li class="border-t-2 border-ink pt-5">
+                <span class="mb-4 block font-display text-step-3 leading-none font-bold text-sky">{i + 1}</span>
+                <h3 class="text-step-1">{s.title}</h3>
+                <p class="mt-[0.6rem] text-ink-soft">{s.text}</p>
+              </li>
+            ))
+          }
+        </ol>
+      </div>
+    </section>
+
+    <!-- Contacto -->
+    <section id="contacto" class={ui.section} aria-labelledby="contacto-title">
+      <div class={`${ui.wrap} grid grid-cols-[minmax(0,5fr)_minmax(0,6fr)] items-start gap-[clamp(2.5rem,7vw,6rem)] max-[961px]:grid-cols-1`}>
+        <div>
+          <h2 id="contacto-title" class={ui.sectionTitle}>Cuéntanos tu proyecto</h2>
+          <p class="mt-5 max-w-[28rem] text-ink-soft">
+            Completa el formulario y se abrirá WhatsApp con tu mensaje listo para enviar. Respondemos el mismo día en horario
+            laboral.
+          </p>
+          <ul class="mt-9 list-none border-t border-line" data-contact-links>
+            {
+              links.map((l) => (
+                <li>
+                  <a class={ui.contactLink} href={l.href} target="_blank" rel="noopener noreferrer" data-kind={l.key}>
+                    <span class={ui.contactIcon} set:html={iconSvg(l.key)} />
+                    <span class={ui.contactLabel}>{l.label}</span>
+                    {l.detail && <span class={ui.contactDetail}>{l.detail}</span>}
+                    <Fragment set:html={iconSvg('arrow', ui.contactArrow)} />
+                  </a>
+                </li>
+              ))
+            }
+          </ul>
+        </div>
+
+        <form
+          class="grid gap-5 rounded-card border border-line bg-surface p-[clamp(1.25rem,4vw,2.25rem)]"
+          data-contact-form
+          novalidate
+        >
+          <div class={ui.field}>
+            <label class={ui.label} for="c-name">Nombre</label>
+            <input class={ui.input} id="c-name" name="name" autocomplete="name" maxlength="80" required />
+          </div>
+          <div class={ui.field}>
+            <label class={ui.label} for="c-company">Negocio o empresa <span class={ui.hint}>(opcional)</span></label>
+            <input class={ui.input} id="c-company" name="company" autocomplete="organization" maxlength="80" />
+          </div>
+          <div class={ui.field}>
+            <label class={ui.label} for="c-type">Qué necesitas</label>
+            <select class={ui.input} id="c-type" name="type" required>
+              <option value="">Elige una opción</option>
+              <option>Sitio web o landing page</option>
+              <option>Aplicación web</option>
+              <option>Panel administrativo</option>
+              <option>Soporte o mejoras a un sitio existente</option>
+              <option>Otro</option>
+            </select>
+          </div>
+          <div class={ui.field}>
+            <label class={ui.label} for="c-message">Mensaje</label>
+            <textarea
+              class={ui.textarea}
+              id="c-message"
+              name="message"
+              maxlength="1200"
+              required
+              placeholder="Qué quieres construir, para cuándo lo necesitas y cualquier detalle útil."></textarea>
+          </div>
+          <p class={ui.error} data-form-error role="alert" hidden></p>
+          <button class={`${ui.btnPrimary} justify-self-start max-[721px]:justify-self-stretch`} type="submit">
+            Enviar por WhatsApp
+          </button>
+        </form>
+      </div>
+    </section>
+  </main>
+
+  <footer class="relative isolate overflow-hidden border-t border-line bg-night pt-[clamp(3.5rem,8vw,6rem)] text-footer-text [&_:focus-visible]:outline-white">
+    <!-- Resplandor cobalto detrás del pie -->
+    <div
+      aria-hidden="true"
+      class="pointer-events-none absolute inset-x-[-10%] bottom-[-40%] -z-10 h-[70%] bg-[radial-gradient(ellipse_at_50%_100%,color-mix(in_srgb,var(--color-cobalt)_45%,transparent),transparent_65%)]"
+    >
+    </div>
+    <div class={ui.wrap}>
+      <div
+        class="grid grid-cols-[minmax(0,1.6fr)_repeat(3,minmax(0,1fr))] gap-x-[clamp(1.5rem,4vw,3.5rem)] gap-y-10 border-b border-footer-line pb-[clamp(2.5rem,6vw,4rem)] max-[961px]:grid-cols-3 max-[561px]:grid-cols-2"
+      >
+        <div class="grid max-w-[24rem] content-start gap-4 max-[961px]:col-span-full">
+          <a href="/" class="justify-self-start" aria-label="JeiXSoft, inicio">
+            <img src="/logo.png" alt="JeiXSoft" width="929" height="208" class="h-8 w-auto" loading="lazy" />
+          </a>
+          <p class="text-[0.7rem] font-medium tracking-[0.28em] text-footer-bright uppercase">Ideas que se convierten en soluciones</p>
+          <p>Sitios web, aplicaciones y sistemas a la medida, hechos con cuidado en cada detalle.</p>
+          <p
+            class="inline-flex items-center gap-[0.6rem] justify-self-start rounded-full border border-footer-line px-[0.85rem] py-[0.4rem] text-fine text-footer-bright"
+          >
+            <span class="size-2 animate-online rounded-full bg-online" aria-hidden="true"></span>Disponible para nuevos proyectos
+          </p>
+        </div>
+
+        <nav aria-label="Pie de página">
+          <h2 class={footerHeading}>Navegación</h2>
+          <ul class={footerList}>
+            {
+              navLinks.map(([href, label]) => (
+                <li>
+                  <a class={ui.footerLink} href={href}>
+                    {label}
+                  </a>
+                </li>
+              ))
+            }
+          </ul>
+        </nav>
+
+        <div>
+          <h2 class={footerHeading}>Servicios</h2>
+          <ul class={footerList}>
+            {services.map((s) => <li>{s.title}</li>)}
+          </ul>
+        </div>
+
+        <div class="max-[561px]:col-span-full">
+          <h2 class={footerHeading}>Contacto</h2>
+          <ul class={footerList} data-footer-links>
+            {
+              links.map((l) => (
+                <li>
+                  <a class={ui.footerLink} href={l.href} target="_blank" rel="noopener noreferrer">
+                    <Fragment set:html={iconSvg(l.key, ui.footerIcon)} />
+                    {l.label}
+                  </a>
+                </li>
+              ))
+            }
+          </ul>
+        </div>
+      </div>
+      <div class="mt-6 flex flex-wrap items-center justify-between gap-x-8 gap-y-4 border-t border-footer-line py-7 text-fine">
+        <p>&copy; {year} JeiXSoft. Medellín, Colombia.</p>
+        <a href="#contenido" class="group inline-flex items-center gap-[0.4rem] text-footer-bright no-underline">
+          Volver arriba <span class="transition-transform duration-200 group-hover:-translate-y-[3px]" aria-hidden="true">↑</span>
+        </a>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    import '../scripts/public';
+  </script>
+</Base>
